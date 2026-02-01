@@ -21,6 +21,15 @@ background:linear-gradient(135deg,#ff9a9e,#fad0c4);
 
 h1{color:white}
 
+img{
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+border:3px solid white;
+}
+
 button{
 padding:12px 28px;
 font-size:18px;
@@ -35,11 +44,7 @@ cursor:pointer;
 .hidden{display:none}
 
 /* hearts */
-.heart{
-position:absolute;
-animation:float 6s linear infinite;
-}
-
+.heart{position:absolute;animation:float 6s linear infinite}
 @keyframes float{
 from{transform:translateY(100vh);opacity:1}
 to{transform:translateY(-10vh);opacity:0}
@@ -48,17 +53,11 @@ to{transform:translateY(-10vh);opacity:0}
 /* fireworks */
 .spark{
 position:absolute;
-width:6px;
-height:6px;
-border-radius:50%;
+width:6px;height:6px;border-radius:50%;
 animation:boom 1.5s ease-out forwards;
 }
-
 @keyframes boom{
-to{
-transform:translate(var(--x),var(--y));
-opacity:0;
-}
+to{transform:translate(var(--x),var(--y));opacity:0}
 }
 </style>
 </head>
@@ -70,12 +69,20 @@ opacity:0;
 </audio>
 
 <div class="container">
+
+<!-- Replace mau.jpg with her photo filename -->
+<img src="mau.jpg" onerror="this.style.display='none'">
+
 <h1 id="question">Mau, will you be my Valentine? 💖</h1>
 
 <button id="yes">Yes 😍</button>
 <button id="no">No 🙈</button>
 
 <h1 id="result" class="hidden"></h1>
+
+<br>
+<button id="share" class="hidden">Share on WhatsApp 💬</button>
+
 </div>
 
 <script>
@@ -84,6 +91,7 @@ const yesBtn=document.getElementById("yes");
 const result=document.getElementById("result");
 const question=document.getElementById("question");
 const music=document.getElementById("music");
+const share=document.getElementById("share");
 
 function moveNo(){
 noBtn.style.left=Math.random()*(innerWidth-100)+"px";
@@ -93,33 +101,41 @@ noBtn.addEventListener("mouseover",moveNo);
 noBtn.addEventListener("touchstart",moveNo);
 
 yesBtn.onclick=()=>{
+navigator.vibrate?.(300);
 question.style.display="none";
 yesBtn.style.display="none";
 noBtn.style.display="none";
 music.play();
 typeMessage();
 fireworks();
+share.classList.remove("hidden");
 };
 
-const msg="Yayyy Mau ❤️ Shekhar\n\nI promise to make you smile every day 💕";
+const msg="Yayyy Mau ❤️ Shekhar\n\nWill you be mine forever? 💍\n\nI promise to make you smile every day 💕";
 
 let i=0;
 function typeMessage(){
 result.classList.remove("hidden");
 if(i<msg.length){
-result.innerHTML+=msg[i]==="\n"?"<br>":msg[i];
+result.innerHTML+=msg[i]===\"\\n\"?\"<br>\":msg[i];
 i++;
 setTimeout(typeMessage,60);
 }
 }
 
+// WhatsApp share
+share.onclick=()=>{
+const text=\"Mau ❤️ Shekhar — She said YES 💖\";
+window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+};
+
 // hearts
 setInterval(()=>{
-let h=document.createElement("div");
-h.className="heart";
-h.innerHTML="❤️";
-h.style.left=Math.random()*100+"vw";
-h.style.fontSize=Math.random()*20+10+"px";
+let h=document.createElement(\"div\");
+h.className=\"heart\";
+h.innerHTML=\"❤️\";
+h.style.left=Math.random()*100+\"vw\";
+h.style.fontSize=Math.random()*20+10+\"px\";
 document.body.appendChild(h);
 setTimeout(()=>h.remove(),6000);
 },400);
@@ -128,13 +144,13 @@ setTimeout(()=>h.remove(),6000);
 function fireworks(){
 setInterval(()=>{
 for(let i=0;i<25;i++){
-let s=document.createElement("div");
-s.className="spark";
-s.style.left="50vw";
-s.style.top="50vh";
+let s=document.createElement(\"div\");
+s.className=\"spark\";
+s.style.left=\"50vw\";
+s.style.top=\"50vh\";
 s.style.background=`hsl(${Math.random()*360},100%,50%)`;
-s.style.setProperty("--x",(Math.random()*400-200)+"px");
-s.style.setProperty("--y",(Math.random()*400-200)+"px");
+s.style.setProperty(\"--x\",(Math.random()*400-200)+\"px\");
+s.style.setProperty(\"--y\",(Math.random()*400-200)+\"px\");
 document.body.appendChild(s);
 setTimeout(()=>s.remove(),1500);
 }
