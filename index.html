@@ -55,23 +55,15 @@ animation:boom 1.5s ease-out forwards;
 @keyframes boom{
 to{transform:translate(var(--x),var(--y));opacity:0}
 }
-
-/* YouTube embed styling */
-#player{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:1;
-display:none;
-}
 </style>
 </head>
 
 <body>
 
-<div id="player"></div>
+<!-- Ringtone audio -->
+<audio id="music" preload="auto" playsinline>
+  <source src="ringtone.mp3" type="audio/mpeg">
+</audio>
 
 <div class="container">
 <h1 id="question">Mau, will you be my Valentine? 💖</h1>
@@ -87,6 +79,7 @@ const noBtn=document.getElementById("no");
 const yesBtn=document.getElementById("yes");
 const result=document.getElementById("result");
 const question=document.getElementById("question");
+const music=document.getElementById("music");
 
 // NO button moves away
 function moveNo(){
@@ -96,48 +89,29 @@ noBtn.style.top  = Math.random()*(innerHeight-60)+"px";
 noBtn.addEventListener("mouseover",moveNo);
 noBtn.addEventListener("touchstart",moveNo);
 
-// YouTube API setup
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
-let player;
-function onYouTubeIframeAPIReady(){
-  player = new YT.Player('player',{
-    videoId: 'JD58XzyvkdA',
-    playerVars: {
-      'autoplay': 0,
-      'controls': 0,
-      'loop': 1,
-      'playlist': 'JD58XzyvkdA',
-      'modestbranding': 1
-    },
-    events: {}
-  });
-}
-
 // YES click
-yesBtn.onclick = ()=>{
+yesBtn.onclick=()=>{
 navigator.vibrate?.([300,100,300]);
+
+// play your downloaded ringtone
+setTimeout(()=>{
+music.play().catch(()=>{});
+},200);
 
 question.style.display="none";
 yesBtn.style.display="none";
 noBtn.style.display="none";
 
-// show YouTube and play
-document.getElementById('player').style.display='block';
-player.playVideo();
-
 typeMessage();
 fireworks();
 };
 
-const msg="Mau ❤️ Shekhar\n\nI promise to make you smile every day 💕\nAnd you know I really love you so much Mau and I can wait for you ❤️";
+const msg="Yeahh Mau ❤️ Shekhar\n\nI promise to make you smile every day 💕\nAnd you know I really love you so much, Mau, and I can wait for you ❤️";
 
 let i=0;
 function typeMessage(){
 result.classList.remove("hidden");
-if(i < msg.length){
+if(i<msg.length){
 result.innerHTML += msg[i]==="\n"?"<br>":msg[i];
 i++;
 setTimeout(typeMessage,60);
