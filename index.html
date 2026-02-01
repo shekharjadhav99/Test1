@@ -17,15 +17,9 @@ font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#ff9a9e,#fad0c4);
 }
 
-.container{
-text-align:center;
-padding:20px;
-}
+.container{text-align:center;padding:20px}
 
-h1{
-color:white;
-font-size:1.8rem;
-}
+h1{color:white;font-size:1.8rem}
 
 button{
 padding:18px 40px;
@@ -43,19 +37,11 @@ font-size:26px;
 box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
-#no{
-position:absolute;
-background:white;
-}
-
+#no{position:absolute;background:white}
 .hidden{display:none}
 
-/* floating hearts */
-.heart{
-position:absolute;
-animation:float 6s linear infinite;
-}
-
+/* hearts */
+.heart{position:absolute;animation:float 6s linear infinite}
 @keyframes float{
 from{transform:translateY(100vh);opacity:1}
 to{transform:translateY(-10vh);opacity:0}
@@ -63,27 +49,29 @@ to{transform:translateY(-10vh);opacity:0}
 
 /* fireworks */
 .spark{
-position:absolute;
-width:6px;
-height:6px;
-border-radius:50%;
+position:absolute;width:6px;height:6px;border-radius:50%;
 animation:boom 1.5s ease-out forwards;
 }
-
 @keyframes boom{
-to{
-transform:translate(var(--x),var(--y));
-opacity:0;
+to{transform:translate(var(--x),var(--y));opacity:0}
 }
+
+/* YouTube embed styling */
+#player{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:1;
+display:none;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7b7b0a5d3a.mp3">
-</audio>
+<div id="player"></div>
 
 <div class="container">
 <h1 id="question">Mau, will you be my Valentine? 💖</h1>
@@ -95,52 +83,74 @@ opacity:0;
 </div>
 
 <script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const result = document.getElementById("result");
-const question = document.getElementById("question");
-const music = document.getElementById("music");
+const noBtn=document.getElementById("no");
+const yesBtn=document.getElementById("yes");
+const result=document.getElementById("result");
+const question=document.getElementById("question");
 
-// make NO run away
+// NO button moves away
 function moveNo(){
-noBtn.style.left = Math.random()*(innerWidth-120)+"px";
+noBtn.style.left=Math.random()*(innerWidth-120)+"px";
 noBtn.style.top  = Math.random()*(innerHeight-60)+"px";
 }
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
 
-// YES clicked
-yesBtn.onclick = () => {
+// YouTube API setup
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+let player;
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player('player',{
+    videoId: 'JD58XzyvkdA',
+    playerVars: {
+      'autoplay': 0,
+      'controls': 0,
+      'loop': 1,
+      'playlist': 'JD58XzyvkdA',
+      'modestbranding': 1
+    },
+    events: {}
+  });
+}
+
+// YES click
+yesBtn.onclick = ()=>{
 navigator.vibrate?.([300,100,300]);
-music.play();
 
 question.style.display="none";
 yesBtn.style.display="none";
 noBtn.style.display="none";
 
+// show YouTube and play
+document.getElementById('player').style.display='block';
+player.playVideo();
+
 typeMessage();
 fireworks();
 };
 
-const msg = "Yeahh Mau ❤️ Shekhar\n\nI promise to make you smile every day 💕\nAnd you know I really love you so much, Mau, and I can wait for you ❤️";
+const msg="Yeahh Mau ❤️ Shekhar\n\nI promise to make you smile every day 💕\nAnd you know I really love you so much, Mau, and I can wait for you ❤️";
 
-let i = 0;
+let i=0;
 function typeMessage(){
 result.classList.remove("hidden");
 if(i < msg.length){
-result.innerHTML += msg[i] === "\n" ? "<br>" : msg[i];
+result.innerHTML += msg[i]==="\n"?"<br>":msg[i];
 i++;
-setTimeout(typeMessage, 60);
+setTimeout(typeMessage,60);
 }
 }
 
-// floating hearts
+// hearts
 setInterval(()=>{
 let h = document.createElement("div");
-h.className = "heart";
-h.innerHTML = "❤️";
-h.style.left = Math.random()*100+"vw";
-h.style.fontSize = Math.random()*20+12+"px";
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=Math.random()*20+12+"px";
 document.body.appendChild(h);
 setTimeout(()=>h.remove(),6000);
 },400);
